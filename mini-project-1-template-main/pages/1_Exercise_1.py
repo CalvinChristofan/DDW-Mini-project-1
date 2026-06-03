@@ -10,36 +10,17 @@ st.header("Exercise 1")
 
 
 def generate():
-    # TODO: Task 1
-    #
-    # replace the None to call the gen_random_int() function
-    # array: list[int] = None
-
-    # call create_string() function to convert the list to a single string
-    # array_str: str = None
-
-    # store into session_state
-    ### your code ###
+    array: list[int] = gen_random_int(10, datetime.now().timestap())
+    array_str: str = create_string(array)
 
     st.session_state['numbers'] = array_str
 
 
 def sort_generated_numbers():
-    # TODO: Task 2
-    #
-    # Retrieves the generated number from the session_state
     numbers: str = st.session_state.numbers
-
-    # Write code to create a list of integers
-    # array_int: list[int] = None
-
-    # Sort the list using my_sort() function
-
-    # convert the list to a single string by calling create_string() funcation
-    # array_str: str = None
-
-    # store in session_state
-    ### your code ###
+    array_int: list[int] = [int(n) for n in numbers.rstrip('.').split(', ')]
+    my_sort(array_int)
+    array_str: str = create_string(array_int)
 
     st.session_state['sorted_numbers'] = array_str
 
@@ -63,14 +44,12 @@ st.write("Generated Numbers:", st.session_state['numbers'])
 #
 # Write code to create a button called "Sort" and
 # bind it to sort_generated_numbers() function
-# st.button(your code here)
+st.button("Sort", on_click=sort_generated_numbers)
 
 # Write a code to display the sorted numbers in this format:
 # Sorted Numbers: list of numbers
 # use session_state called sorted_numbers to pass the data
-# st.write(your code here)
-
-### your code ###
+st.write(f"Sorted Numbers: {st.session_state.get('sorted_numbers', '')}")
 
 # this code is provided to clear the page
 st.button("Clear", on_click=clear)
