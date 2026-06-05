@@ -16,16 +16,16 @@ def sort_numbers():
 
     # Create the list of integers from the string
     # array_int: list[int] = None
+    array_int: list[int] = [int(n.strip()) for n in numbers.split(", ")]
 
     # call my_sort() to sort the list of integers
+    my_sort(array_int)
 
     # call create_string() to convert the list to a single string
     # array_str: str = None
+    array_str: str = create_string(array_int)
 
     # store into session_state
-
-    ### your code ###
-
     st.session_state['sorted_numbers'] = array_str
 
 
@@ -45,12 +45,13 @@ st.text_input("Enter integers separated by comma:", key="numbers")
 #
 # Create a button which calls sort_numbers when it is clicked.
 # st.button(something, on_click=something)
+st.button("Sort", on_click = sort_numbers)
 
 # Display the sorted_numbers from the session_state in this format:
 # Sorted Numbers: ...
 # st.write(your code here)
+st.write("Sorted Numbers:", st.session_state['sorted_numbers'])
 
 # Create a button which calls clear() when it is clicked
 # st.button(your code here)
-
-### your code ###
+st.button("Clear", on_click = clear)

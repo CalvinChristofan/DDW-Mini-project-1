@@ -10,7 +10,7 @@ st.header("Exercise 1")
 
 
 def generate():
-    array: list[int] = gen_random_int(10, datetime.now().timestap())
+    array: list[int] = gen_random_int(10, datetime.now().timestamp())
     array_str: str = create_string(array)
 
     st.session_state['numbers'] = array_str
