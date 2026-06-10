@@ -1,5 +1,5 @@
 import csv
-from pathlib import Path
+import random
 
 import streamlit as st
 
@@ -7,30 +7,22 @@ from library import quicksort
 
 st.set_page_config(page_title="Exercise 3")
 
-# country_strength.csv dataset, see on repo root
-DATA_FILES = [
-    Path(__file__).resolve().parent.parent / "country_strength.csv",
-    Path(__file__).resolve().parent / "country_strength.csv",
-    Path("country_strength.csv"),
-]
+# the app is run from the repo root (streamlit run Home.py), so the CSV is right there
+CSV_FILE = "country_strength.csv"
 
 
 def load_teams():
-    for path in DATA_FILES:
-        if path.exists():
-            with open(path, newline="", encoding="utf-8") as f:
-                teams = [
-                    (float(r["squad_strength"]), r["country"], r["best_player"])
-                    for r in csv.DictReader(f)
-                ]
-            teams.sort(key=lambda t: t[1]) 
-            return teams
-    return None
+    with open(CSV_FILE, newline="", encoding="utf-8") as f:
+        teams = [
+            (float(r["squad_strength"]), r["country"], r["best_player"])
+            for r in csv.DictReader(f)
+        ]
+    random.shuffle(teams)  # CSV is pre-ranked, scramble it so Sort has work to do
+    return teams
 
 
 def reset_teams():
-    base = load_teams()
-    st.session_state.teams = list(base) if base else []
+    st.session_state.teams = load_teams()
     st.session_state.sorted = False
 
 
@@ -55,10 +47,6 @@ st.header("Exercise 3")
 st.subheader("World Cup Power Ranking")
 st.caption("National teams ranked by the average overall of their top 23 FIFA 23 players, sorted with quicksort.")
 
-if not st.session_state.teams:
-    st.error("country_strength.csv not found. Put it in your repo root, next to Home.py.")
-    st.stop()
-
 with st.expander("Add a team"):
     c1, c2, c3 = st.columns([3, 2, 1])
     c1.text_input("Country", key="new_name", placeholder="e.g. Singapore")
@@ -69,7 +57,7 @@ left, right = st.columns(2)
 left.button("Sort", on_click=sort_teams, type="primary", use_container_width=True)
 right.button("Reset", on_click=reset_teams, use_container_width=True)
 
-label = "Ranked strongest to weakest" if st.session_state.sorted else "Unsorted (alphabetical)"
+label = "Ranked strongest to weakest" if st.session_state.sorted else "Unsorted (shuffled)"
 st.markdown(f"**{label}** · {len(st.session_state.teams)} teams")
 
 rows = ""
